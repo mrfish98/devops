@@ -21,7 +21,8 @@ jobs:
           ls
           cd frontend
           npm install
-          echo "::set-output name=build_dir::path/to/build/directory"
+          pwd
+         # echo "path/to/build/directory" > build_dir.txt
 # jobs:
 #   unit-test:
 #     runs-on: ubuntu-latest
