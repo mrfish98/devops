@@ -7,7 +7,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: build fe
+      - name: checkout
+        uses: action/checkout@v2
+
+      - name: pwd
         run: |
           echo "step pwd"
           pwd
