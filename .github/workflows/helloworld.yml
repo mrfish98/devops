@@ -9,6 +9,8 @@ jobs:
     steps:
       - name: build fe
         run: |
+          echo "step ls"
           ls
+          echo "step pwd"
           pwd
       
