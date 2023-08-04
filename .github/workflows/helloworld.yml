@@ -3,34 +3,43 @@ on:
   push:
     branches: [main]
 jobs:
-  say-hello:
+  build-fe:
     runs-on: ubuntu-latest
 
     steps:
       - name: checkout
         uses: actions/checkout@v2
 
-      - name: pwd
-        run: |
-          echo "step pwd"
-          pwd
-      - name: ls
-        run: ls -la
       - name: build frontend
         run: |
           ls
           cd frontend
           npm install
           pwd
-         # echo "path/to/build/directory" > build_dir.txt
-# jobs:
-#   unit-test:
-#     runs-on: ubuntu-latest
-#     steps:
-#       - name: checkout code
-#         uses: actions/checkout@v2
+          echo "/home/runner/work/devops/devops/frontend" > build_dir.txt
+      
+      - name: Cache build artifacts
+        uses: actions/cache@v2
+        with:
+          path: /home/runner/work/devops/devops/frontend
+          key:  ${{ runner.os }}-build-${{ hashFiles('/home/runner/work/devops/devops/frontend') }}
+  unit-test:
+    needs: build-fe 
+    runs-on: ubuntu-latest
 
-#       - name: restore build artifacts from cache
-#         uses: actions/cache@v2
-#         with:
-#           path: 
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v2
+
+      - name: restore build artifacts from cache
+        uses: actions/cache@v2
+        with: 
+          path: /home/runner/work/devops/devops/frontend
+          key:  ${{ runner.os }}-build-${{ hashFiles('/home/runner/work/devops/devops/frontend') }}
+          restore-keys: |
+            ${{ runner.os }}-build-
+      
+      - name: test 
+        run: |
+          npm run test
+
