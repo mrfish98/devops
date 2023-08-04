@@ -41,5 +41,6 @@ jobs:
       
       - name: test 
         run: |
+          cd frontend
           npm run test
 
