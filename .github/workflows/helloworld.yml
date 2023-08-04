@@ -21,4 +21,15 @@ jobs:
           ls
           cd frontend
           npm install
-          
+          echo "::set-output name=build_dir::path/to/build/directory"
+# jobs:
+#   unit-test:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: checkout code
+#         uses: actions/checkout@v2
+
+#       - name: restore build artifacts from cache
+#         uses: actions/cache@v2
+#         with:
+#           path: 
