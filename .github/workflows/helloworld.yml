@@ -17,4 +17,8 @@ jobs:
       - name: ls
         run: ls -la
       - name: build frontend
-        run: npm install
+        run: |
+          ls
+          cd frontend
+          npm install
+          
