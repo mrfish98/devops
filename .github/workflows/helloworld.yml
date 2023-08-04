@@ -12,5 +12,5 @@ jobs:
           echo "step pwd"
           pwd
       - name: ls
-        run: ls
+        run: ls -la
       
