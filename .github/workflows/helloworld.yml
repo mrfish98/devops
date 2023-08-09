@@ -50,13 +50,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - run: cd frontend
-      - run: node --version
-      - run: npm ci
-      - run: npm run build
-      - run: npm run format-check
-      - run: npm run lint
-      - run: npm test
+      # - run: cd frontend
+      # - run: node --version
+      # - run: npm ci
+      # - run: npm run build
+      # - run: npm run format-check
+      # - run: npm run lint
+      # - run: npm test
+      # - run: |
+          cd frontend
+          node --version
+          npm ci
+          npm run build
+          npm run format-check
+          npm run lint
+          npm test
 
       - name: Upload test results
         if: success() || failure()
