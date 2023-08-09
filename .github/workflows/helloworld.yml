@@ -1,46 +1,74 @@
 name: Hello world
 on:
+  pull_request:
+    branches: [main]
   push:
     branches: [main]
 jobs:
-  build-fe:
-    runs-on: ubuntu-latest
+  # build-fe:
+  #   runs-on: ubuntu-latest
 
-    steps:
-      - name: checkout
-        uses: actions/checkout@v2
+  #   steps:
+  #     - name: checkout
+  #       uses: actions/checkout@v2
 
-      - name: build frontend
-        run: |
-          ls
-          cd frontend
-          npm install
-          pwd
-          echo "/home/runner/work/devops/devops/frontend" > build_dir.txt
+  #     - name: build frontend
+  #       run: |
+  #         ls
+  #         cd frontend
+  #         npm install
+  #         pwd
+  #         echo "/home/runner/work/devops/devops/frontend" > build_dir.txt
       
-      - name: Cache build artifacts
-        uses: actions/cache@v2
+  #     - name: Cache build artifacts
+  #       uses: actions/cache@v2
+  #       with:
+  #         path: /home/runner/work/devops/devops/frontend
+  #         key:  ${{ runner.os }}-build-${{ hashFiles('/home/runner/work/devops/devops/frontend') }}
+  # unit-test:
+  #   needs: build-fe 
+  #   runs-on: ubuntu-latest
+
+  #   steps:
+  #     - name: checkout code
+  #       uses: actions/checkout@v2
+
+  #     - name: restore build artifacts from cache
+  #       uses: actions/cache@v2
+  #       with: 
+  #         path: /home/runner/work/devops/devops/frontend
+  #         key:  ${{ runner.os }}-build-${{ hashFiles('/home/runner/work/devops/devops/frontend') }}
+  #         restore-keys: |
+  #           ${{ runner.os }}-build-
+      
+  #     - name: test 
+  #       run: |
+  #         cd frontend
+  #         npm run test
+  build-test:
+    name: Build & Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      # - run: cd frontend
+      # - run: node --version
+      # - run: npm ci
+      # - run: npm run build
+      # - run: npm run format-check
+      # - run: npm run lint
+      # - run: npm test
+      - run: |
+          cd frontend
+          node --version
+          npm ci
+          npm run build
+          npm run format-check
+          npm run lint
+          npm test
+
+      - name: Upload test results
+        if: success() || failure()
+        uses: actions/upload-artifact@v2
         with:
-          path: /home/runner/work/devops/devops/frontend
-          key:  ${{ runner.os }}-build-${{ hashFiles('/home/runner/work/devops/devops/frontend') }}
-  unit-test:
-    needs: build-fe 
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: checkout code
-        uses: actions/checkout@v2
-
-      - name: restore build artifacts from cache
-        uses: actions/cache@v2
-        with: 
-          path: /home/runner/work/devops/devops/frontend
-          key:  ${{ runner.os }}-build-${{ hashFiles('/home/runner/work/devops/devops/frontend') }}
-          restore-keys: |
-            ${{ runner.os }}-build-
-      
-      - name: test 
-        run: |
-          cd frontend
-          npm run test
-
+          name: test-results
+          path: __tests__/__results__/*.xml
